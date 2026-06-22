@@ -1,7 +1,5 @@
-# ============================================================
 # W3 补丁：用"手动分箱"重新计算三个逾期字段的 IV
 # 原因：这三个字段大量为0，等频分箱(qcut)失效，导致IV假性为0
-# ============================================================
 import pandas as pd
 import numpy as np
 
@@ -36,7 +34,7 @@ def manual_woe_iv(data, feature, target):
     iv = grouped['IV_每箱'].sum()
     return grouped, iv
 
-print("========== 重新计算三个逾期字段（手动分箱）==========")
+print("重新计算三个逾期字段（手动分箱）")
 for col in late_cols:
     detail, iv = manual_woe_iv(df, col, target)
     print(f"\n【{col}】  IV = {iv:.4f}")
