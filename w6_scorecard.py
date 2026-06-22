@@ -1,5 +1,4 @@
-# W6：信用评分卡转换 + SHAP模型解释
-# 包含：重新训练模型 → 转评分卡 → 解释单个客户
+# W6：信用评分卡转换 + SHAP模型解释：重新训练模型 → 转评分卡 → 解释单个客户
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -9,7 +8,7 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS']
 plt.rcParams['axes.unicode_minus'] = False
 
-# 0~3. 重复W4的建模流程（数据→切分→WOE→训练）
+# 重复W4的建模流程（数据→切分→WOE→训练）
 df = pd.read_csv('cs-clean.csv', index_col=0)
 target = 'SeriousDlqin2yrs'
 features = [
@@ -58,10 +57,7 @@ model = LogisticRegression(class_weight='balanced', max_iter=1000)
 model.fit(X_train_woe, y_train)
 print("模型训练完成")
 
-# 4. 评分卡转换
-#    公式：Score = Base - PDO/ln(2) * (模型对数几率)
-#    每个特征的每个箱 → 一个分数
-# 评分卡两个参数
+# 评分卡转换；公式：Score = Base - PDO/ln(2) * (模型对数几率)；每个特征的每个箱 → 一个分数
 BASE_SCORE = 600
 PDO = 50
 ODDS = (1 - y_train.mean()) / y_train.mean()   # 用数据真实好坏比
@@ -72,7 +68,7 @@ coef = model.coef_[0]
 intercept = model.intercept_[0]
 total_base = A - B * intercept
 
-print(f"\n========== 信用评分卡（最终版）==========")
+print(f"\n 信用评分卡")
 print(f"配置: Base={BASE_SCORE}, PDO={PDO}, ODDS={ODDS:.1f}, 整体基础分={total_base:.1f}")
 
 scorecard = []
@@ -87,7 +83,7 @@ print("\n评分卡明细(节选)：")
 print(scorecard_df.head(15).to_string(index=False))
 scorecard_df.to_csv('w6_评分卡.csv', index=False, encoding='utf-8-sig')
 
-# 5. 算总信用分
+# 算总信用分
 def score_one(row_woe):
     s = total_base
     for i, f in enumerate(features):
@@ -119,4 +115,3 @@ try:
     print("\n SHAP 重要性图已生成 w6_SHAP重要性.png")
 except ImportError:
     print("\n 未安装shap库，跳过SHAP部分。评分卡已完成。")
-    print("   如需SHAP，请在终端运行: pip install shap")
