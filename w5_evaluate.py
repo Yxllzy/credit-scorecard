@@ -1,7 +1,4 @@
-# ============================================================
 # W5：模型评估报告 —— ROC曲线 + KS曲线 + PSI稳定性
-# 用 W4 保存的预测结果(w4_test_predictions.csv)
-# ============================================================
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,14 +7,12 @@ from sklearn.metrics import roc_curve, roc_auc_score
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS']
 plt.rcParams['axes.unicode_minus'] = False
 
-# ---------- 读预测结果 ----------
+# 读预测结果
 res = pd.read_csv('w4_test_predictions.csv')
 y_true = res['y_true']
 y_prob = res['y_prob']
 
-# ============================================================
 # 1. ROC 曲线 + AUC
-# ============================================================
 fpr, tpr, thresholds = roc_curve(y_true, y_prob)
 auc = roc_auc_score(y_true, y_prob)
 
@@ -34,10 +29,7 @@ plt.savefig('w5_ROC曲线.png', dpi=120)
 plt.show()
 print(f"AUC = {auc:.4f}")
 
-# ============================================================
-# 2. KS 曲线
-#    KS = 累计抓获率(TPR) 与 累计误伤率(FPR) 的最大差距
-# ============================================================
+# 2. KS 曲线；KS = 累计抓获率(TPR) 与 累计误伤率(FPR) 的最大差距
 ks_values = tpr - fpr
 ks = ks_values.max()
 ks_idx = ks_values.argmax()       # KS最大处的位置
@@ -52,19 +44,15 @@ plt.xlabel('预测概率阈值')
 plt.ylabel('累计比例')
 plt.title('KS 曲线')
 plt.legend()
-plt.gca().invert_xaxis()          # 阈值从高到低看更直观
+plt.gca().invert_xaxis()          # 阈值从高到低看
 plt.grid(alpha=0.3)
 plt.tight_layout()
 plt.savefig('w5_KS曲线.png', dpi=120)
 plt.show()
 print(f"KS = {ks:.4f}")
 
-# ============================================================
-# 3. PSI 群体稳定性指标
-#    做法：把预测概率分成10档，对比"两个群体"分布差异。
-#    这里没有未来数据，我们把测试集随机分成两半模拟"两个时间段"，
-#    演示PSI怎么算(真实工作中是用上线后的新数据对比训练数据)。
-# ============================================================
+# 3. PSI 群体稳定性指标；把预测概率分成10档，对比"两个群体"分布差异。
+# 由于没有未来数据，采取把测试集随机分成两半模拟"两个时间段"，模拟计算PSI
 def calc_psi(expected, actual, bins=10):
     """expected=基准群体, actual=对比群体, 返回PSI值"""
     # 用基准群体的分位数定边界
@@ -90,10 +78,10 @@ psi = calc_psi(group_A.values, group_B.values)
 print(f"\nPSI = {psi:.4f}")
 print("PSI判定标准： <0.1 稳定 | 0.1~0.25 轻微波动 | >0.25 需重训模型")
 if psi < 0.1:
-    print("→ 结论：模型在两个群体上分布稳定 ✅")
+    print("结论：模型在两个群体上分布稳定")
 elif psi < 0.25:
-    print("→ 结论：轻微波动，可继续监控")
+    print("结论：轻微波动，可继续监控")
 else:
-    print("→ 结论：分布差异大，建议重新训练")
+    print("结论：分布差异大，建议重新训练")
 
-print("\n✅ W5 完成！生成了 ROC曲线、KS曲线 两张图")
+print("\nW5 完成！生成了 ROC曲线、KS曲线 两张图")
