@@ -40,8 +40,24 @@
 批判性思维：发现关键逾期变量 IV 异常接近 0，排查后定位根因为"零膨胀变量上等频分箱失效"，改用业务含义分箱后 IV 回升至 0.6+，  并清晰呈现"逾期越多、坏账率越高"的单调风险趋势。
 防数据泄露：所有 WOE 分箱规则仅从训练集学习，再应用到测试集，  避免未来信息污染模型。
 可解释性：将逻辑回归转换为标准信用评分卡（Base=600, PDO=50），  并用 SHAP 做单客户级别的归因，满足金融监管对拒贷理由告知的要求。
+业务导向：将模型指标转化为坏账率与净收益，回答"模型到底值多少钱"。
 
-## 📈 结果展示
+## 项目结构
+
+credit-scorecard/
+├── README.md
+├── w1_eda.py # 数据探索
+├── w2_check.py # 异常值侦查
+├── w2_clean.py # 数据清洗
+├── w3_woe_iv.py # 特征工程(WOE/IV)
+├── w3b_late_check.py # 逾期变量IV修正验证
+├── w4_model.py # 模型训练
+├── w5_evaluate.py # 模型评估(ROC/KS/PSI)
+├── w6_scorecard.py # 评分卡 + SHAP
+├── w7_business_value.py # 业务价值量化
+└── *.png # 结果图表
+
+## 结果展示
 
 ### ROC 曲线（AUC = 0.86）
 ![ROC](roc.png)
@@ -61,8 +77,3 @@
 ## 数据说明
 
 数据来自 Kaggle 公开竞赛 [Give Me Some Credit](https://www.kaggle.com/c/GiveMeSomeCredit)，共 15 万条样本、10 个特征。因数据使用协议，本仓库不包含原始数据文件，运行前请自行从 Kaggle 下载 `cs-training.csv` 放入项目目录。
-
-业务导向：将模型指标转化为坏账率与净收益，回答"模型到底值多少钱"。
-
-## 项目结构
-
