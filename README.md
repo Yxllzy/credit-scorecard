@@ -44,18 +44,20 @@
 
 ## 项目结构
 
+​```
 credit-scorecard/
 ├── README.md
-├── w1_eda.py # 数据探索
-├── w2_check.py # 异常值侦查
-├── w2_clean.py # 数据清洗
-├── w3_woe_iv.py # 特征工程(WOE/IV)
-├── w3b_late_check.py # 逾期变量IV修正验证
-├── w4_model.py # 模型训练
-├── w5_evaluate.py # 模型评估(ROC/KS/PSI)
-├── w6_scorecard.py # 评分卡 + SHAP
-├── w7_business_value.py # 业务价值量化
-└── *.png # 结果图表
+├── w1_eda.py              # 数据探索
+├── w2_check.py            # 异常值侦查
+├── w2_clean.py            # 数据清洗
+├── w3_woe_iv.py           # 特征工程(WOE/IV)
+├── w3b_late_check.py      # 逾期变量IV修正验证
+├── w4_model.py            # 模型训练
+├── w5_evaluate.py         # 模型评估(ROC/KS/PSI)
+├── w6_scorecard.py        # 评分卡 + SHAP
+├── w7_business_value.py   # 业务价值量化
+└── *.png                  # 结果图表
+​```
 
 ## 结果展示
 
